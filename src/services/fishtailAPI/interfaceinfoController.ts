@@ -47,6 +47,36 @@ export async function listInterfaceinfoByPageUsingPost(
   });
 }
 
+/** publishInterfaceinfo POST /api/interfaceinfo/publish */
+export async function publishInterfaceinfoUsingPost(
+  body: API.IdRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseBoolean_>('/api/interfaceinfo/publish', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** shutdownInterfaceinfo POST /api/interfaceinfo/shutdown */
+export async function shutdownInterfaceinfoUsingPost(
+  body: API.IdRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseBoolean_>('/api/interfaceinfo/shutdown', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** updateInterfaceinfo POST /api/interfaceinfo/update */
 export async function updateInterfaceinfoUsingPost(
   body: API.InterfaceinfoUpdateRequest,
