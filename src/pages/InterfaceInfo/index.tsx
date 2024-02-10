@@ -18,7 +18,7 @@ import UpdateForm from './components/UpdateForm';
 import {
   addInterfaceinfoUsingPost,
   deleteInterfaceinfoUsingPost,
-  listInterfaceinfoByPageUsingPost,
+  listInterfaceinfoByPageUsingPost, publishInterfaceinfoUsingPost, shutdownInterfaceinfoUsingPost,
   updateInterfaceinfoUsingPost
 } from "@/services/fishtailAPI/interfaceinfoController";
 import type { SortOrder } from "antd/lib/table/interface";
@@ -78,13 +78,13 @@ const TableList: React.FC = () => {
  * @param fields
  */
   const handleUpdate = async (fields: API.Interfaceinfo) => {
-    
+
     const hide = message.loading('Updating');
     try {
       await updateInterfaceinfoUsingPost({
         id:currentRow.id,
         ...fields,
-        
+
 
       });
       hide();
@@ -117,6 +117,52 @@ const TableList: React.FC = () => {
     } catch (error) {
       hide();
       message.error('Delete failed, please try again'+error.message);
+      return false;
+    }
+  };
+  /**
+   *  Delete node
+   * @zh-CN 上线节点
+   *
+   * @param selectedRows
+   */
+  const handlePublish = async (selectedRows: API.Interfaceinfo) => {
+    const hide = message.loading('正在上线');
+    if (!selectedRows) return true;
+    try {
+      await publishInterfaceinfoUsingPost({
+        id:selectedRows.id
+      });
+      hide();
+      message.success('Publish successfully and will refresh soon');
+      actionRef.current?.reload();
+      return true;
+    } catch (error:any) {
+      hide();
+      message.error('Publish failed, please try again, '+error.message);
+      return false;
+    }
+  };
+  /**
+   *  Delete node
+   * @zh-CN 下线节点
+   *
+   * @param selectedRows
+   */
+  const handleShutdown = async (selectedRows: API.Interfaceinfo) => {
+    const hide = message.loading('正在下线');
+    if (!selectedRows) return true;
+    try {
+      await shutdownInterfaceinfoUsingPost({
+        id:selectedRows.id
+      });
+      hide();
+      message.success('Shutdown successfully and will refresh soon');
+      actionRef.current?.reload();
+      return true;
+    } catch (error:any) {
+      hide();
+      message.error('Delete failed, please try again, '+error.message);
       return false;
     }
   };
@@ -219,14 +265,32 @@ const TableList: React.FC = () => {
         >
           修改
         </a>,
-        <a
+        record.status===0?<a
+          key="publish"
+          onClick={() => {
+            handlePublish(record);
+          }}
+        >
+          上线
+        </a>:null,
+        record.status!==0?<a
+          key="shutdown"
+          onClick={() => {
+            handleShutdown(record);
+          }}
+        >
+          下线
+        </a>:null,
+        <Button
+          type={"text"}
         key="config"
+        danger
         onClick={() => {
           handleRemove(record);
         }}
       >
         删除
-      </a>,
+      </Button>,
       ],
     },
   ];
