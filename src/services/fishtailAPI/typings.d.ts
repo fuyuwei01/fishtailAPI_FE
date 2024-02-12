@@ -11,6 +11,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseInterfaceinfo_ = {
+    code?: number;
+    data?: Interfaceinfo;
+    message?: string;
+  };
+
   type BaseResponseLoginUserVO_ = {
     code?: number;
     data?: LoginUserVO;
@@ -89,6 +95,11 @@ declare namespace API {
   };
 
   type DeleteRequest = {
+    id?: number;
+  };
+
+  type getInterfaceinfoUsingGETParams = {
+    /** id */
     id?: number;
   };
 

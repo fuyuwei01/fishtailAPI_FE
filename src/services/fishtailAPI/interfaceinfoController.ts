@@ -32,6 +32,21 @@ export async function deleteInterfaceinfoUsingPost(
   });
 }
 
+/** getInterfaceinfo GET /api/interfaceinfo/get */
+export async function getInterfaceinfoUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getInterfaceinfoUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseInterfaceinfo_>('/api/interfaceinfo/get', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** listInterfaceinfoByPage POST /api/interfaceinfo/list/page */
 export async function listInterfaceinfoByPageUsingPost(
   body: API.InterfaceinfoQueryRequest,
