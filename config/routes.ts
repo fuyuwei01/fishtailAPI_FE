@@ -13,6 +13,7 @@ export default [
     access: 'canAdmin',
     routes: [
       { name: '接口管理', icon: 'table', path: '/admin/interface_info', component: './Admin/InterfaceInfo' },
+      { name: '用户管理', icon: 'table', path: '/admin/user_info', component: './Admin/UserInfo' },
       // { path: '/admin', redirect: '/admin/sub-page' },
       // { path: '/admin/sub-page', name: '二级管理页', component: './Admin' },
     ],

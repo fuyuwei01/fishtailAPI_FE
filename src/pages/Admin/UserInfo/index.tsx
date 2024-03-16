@@ -17,6 +17,9 @@ import {
   listInterfaceinfoByPageUsingPost, publishInterfaceinfoUsingPost, shutdownInterfaceinfoUsingPost,
   updateInterfaceinfoUsingPost
 } from "@/services/fishtailAPI/interfaceinfoController";
+import {
+  deleteUserUsingPost, listUserVoByPageUsingPost, listUserByPageUsingPost, listAdminUserVoByPageUsingPost
+} from "@/services/fishtailAPI/userController";
 import type { SortOrder } from "antd/lib/table/interface";
 import CreateModal from "@/pages/Admin/InterfaceInfo/components/CreateModal";
 import UpdateModal from './components/UpdateModal';
@@ -92,7 +95,7 @@ const TableList: React.FC = () => {
 
   /**
    *  Delete node
-   * @zh-CN 删除节点
+   * @zh-CN 删除账户
    *
    * @param selectedRows
    */
@@ -100,7 +103,7 @@ const TableList: React.FC = () => {
     const hide = message.loading('正在删除');
     if (!selectedRows) return true;
     try {
-      await deleteInterfaceinfoUsingPost({
+      await deleteUserUsingPost({
         id:selectedRows.id
       });
       hide();
@@ -138,6 +141,29 @@ const TableList: React.FC = () => {
   };
   /**
    *  Delete node
+   * @zh-CN 删除账户
+   *
+   * @param selectedRows
+   */
+  const handleDelete = async (selectedRows: API.Interfaceinfo) => {
+    const hide = message.loading('正在删除');
+    if (!selectedRows) return true;
+    try {
+      await deleteUserUsingPost({
+        id:selectedRows.id
+      });
+      hide();
+      message.success('Delete successfully and will refresh soon');
+      actionRef.current?.reload();
+      return true;
+    } catch (error:any) {
+      hide();
+      message.error('Delete failed, please try again, '+error.message);
+      return false;
+    }
+  };
+  /**
+   *  Delete node
    * @zh-CN 下线节点
    *
    * @param selectedRows
@@ -164,13 +190,13 @@ const TableList: React.FC = () => {
     {
       title: 'id',
       dataIndex: 'id',
-      tip: '接口id',
+      tip: '用户id',
       valueType: 'index',
     },
     {
-      title: '接口名称',
-      dataIndex: 'name',
-      tip: '接口名称',
+      title: '账户',
+      dataIndex: 'userAccount',
+      tip: '账户',
       valueType: 'text',
       formItemProps: {
         rules: [
@@ -182,58 +208,29 @@ const TableList: React.FC = () => {
       }
     },
     {
-      title: '描述',
-      dataIndex: 'description',
+      title: '用户名',
+      dataIndex: 'userName',
       valueType: 'textarea',
     },
     {
-      title: '请求方法',
-      dataIndex: 'method',
+      title: '用户角色',
+      dataIndex: 'userRole',
       valueType: 'text'
     },
     {
-      title: '请求参数',
-      dataIndex: 'requestParams',
-      valueType: 'jsonCode'
-    },
-    {
-      title: '请求头',
-      dataIndex: 'requestHeader',
-      valueType: 'jsonCode'
-    },
-    {
-      title: '响应头',
-      dataIndex: 'responseHeader',
-      valueType: 'jsonCode'
-    },
-    {
-      title: 'url',
-      dataIndex: 'url',
+      title: '用户描述',
+      dataIndex: 'userProfile',
       valueType: 'text'
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      hideInForm: true,
-      colSize: 8,
-      valueEnum: {
-        0: {
-          text: '关闭',
-          status: 'Default',
-        },
-        1: {
-          text: '运行中',
-          status: 'Processing',
-        },
-        2: {
-          text: '已上线',
-          status: 'Success',
-        },
-        3: {
-          text: '异常',
-          status: 'Error',
-        },
-      },
+      title: 'accessKey',
+      dataIndex: 'accessKey',
+      valueType: 'text'
+    },
+    {
+      title: 'secretKey',
+      dataIndex: 'secretKey',
+      valueType: 'text'
     },
     {
       title: '更新时间',
@@ -263,22 +260,6 @@ const TableList: React.FC = () => {
         >
           修改
         </a>,
-        record.status===0?<a
-          key="publish"
-          onClick={() => {
-            handlePublish(record);
-          }}
-        >
-          上线
-        </a>:null,
-        record.status!==0?<a
-          key="shutdown"
-          onClick={() => {
-            handleShutdown(record);
-          }}
-        >
-          下线
-        </a>:null,
         <Button
           type={"text"}
         key="config"
@@ -316,7 +297,7 @@ const TableList: React.FC = () => {
           const sortField = Object.keys(sort)[0];
           const sortOrder = sort[sortField];
 
-          const res = await listInterfaceinfoByPageUsingPost(
+          const res = await listAdminUserVoByPageUsingPost(
             {
               ...params,
               ...(sortField &&

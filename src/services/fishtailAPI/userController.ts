@@ -67,12 +67,43 @@ export async function getUserVoByIdUsingGet(
   });
 }
 
+/** getAccessKey GET /api/user/getAK */
+export async function getAccessKeyUsingGet(options?: { [key: string]: any }) {
+  return request<API.BaseResponseString_>('/api/user/getAK', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** getSecretKey GET /api/user/getSK */
+export async function getSecretKeyUsingGet(options?: { [key: string]: any }) {
+  return request<API.BaseResponseString_>('/api/user/getSK', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 /** listUserByPage POST /api/user/list/page */
 export async function listUserByPageUsingPost(
   body: API.UserQueryRequest,
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePageUser_>('/api/user/list/page', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** listAdminUserVOByPage POST /api/user/list/page/adminVo */
+export async function listAdminUserVoByPageUsingPost(
+  body: API.UserQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponsePageAdminUserVO_>('/api/user/list/page/adminVo', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
